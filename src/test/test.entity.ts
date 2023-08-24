@@ -6,11 +6,9 @@ export class Test {
   id: number;
  
   @Column()
-  property_1: string;
+  email: string;
  
   @Column()
-  property_2: string;
+  password: string;
  
-  @Column()
-  property_3: string;
 }
