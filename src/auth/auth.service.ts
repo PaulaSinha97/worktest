@@ -10,8 +10,8 @@ export class AuthService {
   ) {}
 
   // self create services
-  validateUser(username: string, password: string) {
-    const user = this.userService.findOne(username);
+  async validateUser(username: string, password: string) {
+    const user = await this.userService.findOne(username);
 
     if (user && user.password === password) {
       const { password, ...rest } = user;

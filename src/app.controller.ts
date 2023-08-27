@@ -3,11 +3,15 @@ import { Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { AuthService } from './auth/auth.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { TestService } from './test/test.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly authServiceAnyName: AuthService) {}
-  //dff
+  constructor(
+    private readonly authServiceAnyName: AuthService,
+    private testService: TestService,
+  ) {}
+
   @UseGuards(LocalAuthGuard)
   @Post('/login')
   login(@Request() req) {
@@ -16,8 +20,11 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/protected')
-  getHello(@Request() req): string {
+  async getHello(@Request() req): Promise<any> {
     // require an Bearer token, validate token
-    return req.user;
+    const user = await this.testService.findOne(req.user.name);
+    // return req.user;
+    console.log('>>>>>>>', user, req.user);
+    return user;
   }
 }

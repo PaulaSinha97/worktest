@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { TestService } from 'src/test/test.service';
 
 export type User = {
   id: number;
@@ -8,13 +9,16 @@ export type User = {
 };
 @Injectable()
 export class UserService {
-  private readonly users: User[] = [
-    { id: 1, name: 'Paula', username: 'paula', password: '123' },
-    { id: 2, name: 'Lopa', username: 'lopa', password: '1234' },
-  ];
+  // private readonly users: User[] = [
+  //   { id: 1, name: 'Paula', username: 'paula', password: '123' },
+  //   { id: 2, name: 'Lopa', username: 'lopa', password: '1234' },
+  // ];
 
-  findOne(username: string) {
+  constructor(private testService: TestService) {}
+
+  async findOne(username: string) {
     console.log('PPPPPPPP', username);
-    return this.users.find((user) => user.username === username);
+    const user = await this.testService.findOne(username);
+    return user;
   }
 }
