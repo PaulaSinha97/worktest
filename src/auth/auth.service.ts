@@ -25,6 +25,8 @@ export class AuthService {
     const payload = { name: user.name, sub: user.id };
     // when we register JWT we give a secret and same is used while wes sign
     // Hence in JWT strategy we need the same secret for authorization
+    console.log('innnnnnnnnnnnnnnnn');
+    // res.cookie('jwt', this.jwtService.sign(payload), { httpOnly: true });
     return {
       access_token: this.jwtService.sign(payload),
     };

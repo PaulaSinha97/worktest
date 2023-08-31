@@ -12,7 +12,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
     });
   }
-  // payload is what we stores in the jwt token when we hit login
+  // payload is what we stored in the jwt token when we hit login
   validate(payload: any) {
     // here we can make call to DB and return that
     return {

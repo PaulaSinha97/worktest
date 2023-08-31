@@ -1,4 +1,12 @@
-import { Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Request,
+  Response,
+  Res,
+} from '@nestjs/common';
 // import { AppService } from './app.service';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { AuthService } from './auth/auth.service';
@@ -14,8 +22,11 @@ export class AppController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  login(@Request() req) {
-    return this.authServiceAnyName.login(req.user); // Will return JWT access token
+  login(@Request() req, @Res() resp) {
+    const jwt = this.authServiceAnyName.login(req.user); // Will return JWT access token
+    // resp.cookie('jwt', jwt.access_token, { httpOnly: true });
+
+    return jwt;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -26,5 +37,10 @@ export class AppController {
     // return req.user;
     console.log('>>>>>>>', user, req.user);
     return user;
+  }
+
+  @Get('/protectedWithMiddleware')
+  async protected(@Request() req): Promise<any> {
+    return 'api data';
   }
 }

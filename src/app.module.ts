@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -6,6 +11,7 @@ import { Test } from './test/test.entity';
 import { TestModule } from './test/test.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { JwtCheckMiddleware } from './auth/jwt-middleware';
 
 @Module({
   imports: [
@@ -23,4 +29,11 @@ import { AuthModule } from './auth/auth.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(JwtCheckMiddleware).forRoutes({
+      path: '/protectedWithMiddleware',
+      method: RequestMethod.GET,
+    });
+  }
+}
