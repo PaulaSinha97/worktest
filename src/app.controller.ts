@@ -23,10 +23,7 @@ export class AppController {
   @UseGuards(LocalAuthGuard)
   @Post('/login')
   login(@Request() req, @Res() resp) {
-    const jwt = this.authServiceAnyName.login(req.user); // Will return JWT access token
-    // resp.cookie('jwt', jwt.access_token, { httpOnly: true });
-
-    return jwt;
+     return this.authServiceAnyName.login(req.user); // Will return JWT access token;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -39,8 +36,18 @@ export class AppController {
     return user;
   }
 
+
+  // Middleware
+  @Post('/loginwithmiddleware')
+  async loginWithMiddleware(@Request() req){
+   return 'successly set jwt in cookie';
+  }
+
   @Get('/protectedWithMiddleware')
-  async protected(@Request() req): Promise<any> {
-    return 'api data';
+  async protected(@Request() req, @Response() res): Promise<any> {
+    console.log('>>>>>>> middlewaRE', res.locals);
+    const user = await this.testService.findOne(res.locals.user.name);
+  
+   res.send(user)
   }
 }

@@ -12,6 +12,8 @@ import { TestModule } from './test/test.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtCheckMiddleware } from './auth/jwt-middleware';
+import { JwtValidMiddleware } from './auth/jwtvalid-middleware';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -21,6 +23,10 @@ import { JwtCheckMiddleware } from './auth/jwt-middleware';
       entities: [Test],
       synchronize: true, //development only
     }),
+    // JwtModule.register({
+    //   secret: 'SECRET',
+    //   signOptions: { expiresIn: '1d' },
+    // }),
     TestModule,
     // Imported on it's own
     UserModule,
@@ -32,6 +38,10 @@ import { JwtCheckMiddleware } from './auth/jwt-middleware';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(JwtCheckMiddleware).forRoutes({
+      path: '/loginwithmiddleware',
+      method: RequestMethod.POST,
+    });
+    consumer.apply(JwtValidMiddleware).forRoutes({
       path: '/protectedWithMiddleware',
       method: RequestMethod.GET,
     });

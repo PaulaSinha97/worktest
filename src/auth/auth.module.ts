@@ -3,8 +3,10 @@ import { AuthService } from './auth.service';
 import { UserModule } from 'src/user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './local.strategy';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.stratey';
+import { JwtCheckMiddleware } from './jwt-middleware';
+import { JwtValidMiddleware } from './jwtvalid-middleware';
 
 @Module({
   // using userservice in local strategy by importing usermodule
@@ -16,7 +18,7 @@ import { JwtStrategy } from './jwt.stratey';
       signOptions: { expiresIn: '1d' },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
-  exports: [AuthService],
+  providers: [AuthService, LocalStrategy, JwtStrategy,JwtCheckMiddleware,JwtValidMiddleware],
+  exports: [AuthService,JwtModule],
 })
 export class AuthModule {}
