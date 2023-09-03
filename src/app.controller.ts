@@ -19,11 +19,12 @@ export class AppController {
     private readonly authServiceAnyName: AuthService,
     private testService: TestService,
   ) {}
-
+  // res add krne se data nhi ata pending me
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  login(@Request() req, @Res() resp) {
-     return this.authServiceAnyName.login(req.user); // Will return JWT access token;
+  login(@Request() req) {
+    console.log('routeeeeeee', req.user);
+    return this.authServiceAnyName.login(req.user); // Will return JWT access token;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -36,18 +37,16 @@ export class AppController {
     return user;
   }
 
-
   // Middleware
   @Post('/loginwithmiddleware')
-  async loginWithMiddleware(@Request() req){
-   return 'successly set jwt in cookie';
+  async loginWithMiddleware(@Request() req) {
+    return 'successly set jwt in cookie';
   }
 
   @Get('/protectedWithMiddleware')
   async protected(@Request() req, @Response() res): Promise<any> {
     console.log('>>>>>>> middlewaRE', res.locals);
-    const user = await this.testService.findOne(res.locals.user.name);
-  
-   res.send(user)
+    const user = await this.testService.findOne(res.locals.user);
+    res.send(user);
   }
 }

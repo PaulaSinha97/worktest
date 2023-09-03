@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 
@@ -10,10 +10,11 @@ export class AuthService {
   ) {}
 
   // self create services
-  async validateUser(username: string, password: string) {
-    const user = await this.userService.findOne(username);
-
-    if (user && user.password === password) {
+  async validateUser(name: string, passwordcus: string) {
+    const user = await this.userService.findOne(name);
+    console.log('validate user service', user, passwordcus);
+    if (user && user.password === passwordcus) {
+      console.log('::success');
       const { password, ...rest } = user;
       return rest;
     }
@@ -21,14 +22,18 @@ export class AuthService {
   }
 
   login(user: any) {
-    // Info that we want to save in that JWT
-    const payload = { name: user.name, sub: user.id };
-    // when we register JWT we give a secret and same is used while wes sign
-    // Hence in JWT strategy we need the same secret for authorization
-    console.log('innnnnnnnnnnnnnnnn',user.name);
-    // res.cookie('jwt', this.jwtService.sign(payload), { httpOnly: true });
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    try {
+      // Info that we want to save in that JWT
+      const payload = { name: user.name, sub: user.id };
+      // when we register JWT we give a secret and same is used while wes sign
+      // Hence in JWT strategy we need the same secret for authorization
+      console.log('login user', user.name);
+      // res.cookie('jwt', this.jwtService.sign(payload), { httpOnly: true });
+      return {
+        access_token: this.jwtService.sign(payload),
+      };
+    } catch (e) {
+      throw new UnauthorizedException();
+    }
   }
 }
