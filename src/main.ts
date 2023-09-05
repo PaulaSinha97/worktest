@@ -6,6 +6,7 @@ import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // For FE to get this cookie we need to pass passthorugh and enable here cors
+  // iske bine dikh nhi rhe cookies
   app.enableCors({
     origin: 'http://localhost:3000',
     credentials: true,

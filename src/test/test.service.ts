@@ -27,7 +27,10 @@ export class TestService {
 
   findOne(username: string) {
     console.log('query for find', username);
+    if(username){
     return this.repo.findOneBy({ name: username });
+    }
+    return null;
   }
 
   async update(username: string) {
